@@ -1,21 +1,33 @@
-
-import { NavLink } from "react-router";
+import { Link, NavLink } from "react-router";
 import Logo from "../../../Components/Logo/Logo";
+import useAuth from "../../../Hooks/useAuth";
+import { FaArrowRight } from "react-icons/fa";
 
 const NavBar = () => {
+  const { user, loading, logOut } = useAuth();
+
+  const handleLogout = () => {
+    logOut()
+      .then()
+      .catch((err) => console.log(err));
+  };
+
   const links = (
     <>
       <li>
-        <NavLink to={""}>Services</NavLink>
-      </li>
-      <li>
-        <NavLink to={""}>About Us</NavLink>
+        <NavLink to={"/"}>Services</NavLink>
       </li>
       <li>
         <NavLink to={"/coverage"}>Coverage</NavLink>
       </li>
       <li>
-        <NavLink to={""}>Services</NavLink>
+        <NavLink to={"/about-us"}>About Us</NavLink>
+      </li>
+      <li>
+        <NavLink to={"/pricing"}>Pricing</NavLink>
+      </li>
+      <li>
+        <NavLink to={"/be-a-rider"}>Be a Rider</NavLink>
       </li>
     </>
   );
@@ -45,18 +57,37 @@ const NavBar = () => {
               tabIndex="-1"
               className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
             >
-             {links}
+              {links}
             </ul>
           </div>
           <Logo />
         </div>
         <div className="navbar-center hidden lg:flex">
-          <ul className="menu menu-horizontal px-1">
-           {links}
-          </ul>
+          <ul className="menu menu-horizontal px-1">{links}</ul>
         </div>
         <div className="navbar-end">
-          <a className="btn">Button</a>
+          {loading ? (
+            <span className="loading loading-ring loading-xl"></span>
+          ) : user ? (
+            <button onClick={handleLogout} className="btn">
+              Logout{" "}
+            </button>
+          ) : (
+            <div className="">
+              <Link to={"/login"} className="btn">
+                Sign In
+              </Link>
+            </div>
+          )}
+          <Link
+            to={"/be-a-rider"}
+            className="btn bg-primary text-secondary ml-3"
+          >
+            Be a Rider
+          </Link>
+          <Link className="btn-arrow">
+            <FaArrowRight />
+          </Link>
         </div>
       </div>
     </div>

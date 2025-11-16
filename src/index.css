@@ -13,7 +13,8 @@
 
 body {
   font-family: "Urbanist", sans-serif;
-  background-color: #fdebea;
+  /* background-color: #fdebea; */
+ 
 }
 .btn-primary {
   @apply bg-primary rounded-full text-black font-bold text-xs sm:text-sm md:text-base lg:text-lg  px-3 sm:px-4 md:px-6 py-1 sm:py-2 cursor-pointer;
