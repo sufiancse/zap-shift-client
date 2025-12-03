@@ -15,9 +15,9 @@ const SendParcel = () => {
   } = useForm();
 
   const axiosSecure = useAxiosSecure();
-  const [serviceCenter, setServiceCenter] = useState([]);
   const { user } = useAuth();
   const navigate = useNavigate()
+  const [serviceCenter, setServiceCenter] = useState([]);
 
   useEffect(() => {
     fetch("./serviceCenter.json")

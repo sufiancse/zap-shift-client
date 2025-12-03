@@ -4,6 +4,7 @@ import useAuth from "../../../Hooks/useAuth";
 import { Link, useLocation, useNavigate } from "react-router";
 import SocialLogin from "../SocialLogin/SocialLogin";
 import axios from "axios";
+import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 
 const Register = () => {
   const { registerUser, updateUserProfile } = useAuth();
@@ -15,15 +16,14 @@ const Register = () => {
 
   const navigate = useNavigate();
   const location = useLocation();
+  const axiosSecure = useAxiosSecure();
   const from = location?.state || "/";
 
   const handleRegister = (data) => {
     const profileImg = data.photo[0];
 
     registerUser(data.email, data.password)
-      .then((result) => {
-        console.log(result.user);
-
+      .then(() => {
         // 1.store the image and get photo url
         const formData = new FormData();
         formData.append("image", profileImg);
@@ -33,17 +33,29 @@ const Register = () => {
           import.meta.env.VITE_image_host
         }`;
 
-        axios.post(image_API_URL, formData).then((res) => {
-          console.log("after image upload", res.data.data.url);
+        axios.post(image_API_URL, formData)
+        .then((res) => {
+          const photoURL = res.data.data.url;
+
+          // create user in database
+          const userInfo = {
+            email: data.email,
+            displayName: data.name,
+            photoURL: photoURL,
+          };
+         axiosSecure.post("/users", userInfo)
+          .then(res => {
+            console.log(res)
+          })
 
           //   update user to firebase
           const userProfile = {
             displayName: data.name,
-            photoURL: res.data.data.url,
+            photoURL: photoURL,
           };
 
           updateUserProfile(userProfile)
-            .then(() => console.log("okk"))
+            .then(() => console.log("update user profile okk "))
             .catch((err) => console.log(err));
         });
 
@@ -51,6 +63,8 @@ const Register = () => {
       })
       .catch((err) => console.log(err));
   };
+
+
   return (
     <div className="card bg-base-100 w-full mx-auto max-w-sm shrink-0 shadow-2xl">
       <h1 className="text-center headings pt-5">Create an Account</h1>
