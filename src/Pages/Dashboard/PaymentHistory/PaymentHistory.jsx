@@ -26,6 +26,7 @@ const PaymentHistory = () => {
               <th>Sl</th>
               <th>Parcel Name</th>
               <th>Amount</th>
+              <th>Paid Time</th>
               <th>TransactionId</th>
             </tr>
           </thead>
@@ -35,6 +36,7 @@ const PaymentHistory = () => {
                 <th>{i + 1}</th>
                 <td>{payment?.parcelName}</td>
                 <td>{payment?.amount}</td>
+                <td>{payment?.paidAt}</td>
                 <td>{payment?.transactionId}</td>
               </tr>
             ))}

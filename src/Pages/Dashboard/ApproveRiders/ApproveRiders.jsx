@@ -1,13 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 import { useQuery } from "@tanstack/react-query";
-import { FaUserCheck } from "react-icons/fa";
+import { FaEye, FaUserCheck } from "react-icons/fa";
 import { FaTrashCan } from "react-icons/fa6";
 import { IoPersonRemoveSharp } from "react-icons/io5";
 import Swal from "sweetalert2";
 
 const ApproveRiders = () => {
   const axiosSecure = useAxiosSecure();
+  const [riderData, setRiderData] = useState([]);
 
   const { refetch, data: riders = [] } = useQuery({
     queryKey: ["riders", "pending"],
@@ -65,6 +66,25 @@ const ApproveRiders = () => {
     });
   };
 
+  const handleViewDetails = (rider) => {
+    setRiderData(rider);
+
+    document.getElementById("my_modal_5").showModal();
+  };
+
+  const {
+    name,
+    drivingLicense,
+    email,
+    region,
+    district,
+    nid,
+    phoneNo,
+    bikeDetails,
+    bikeRegistrationNo,
+    aboutYourself,
+  } = riderData || {};
+
   return (
     <div>
       <h2 className="text-4xl font-bold">
@@ -80,7 +100,8 @@ const ApproveRiders = () => {
               <th>Name</th>
               <th>Email</th>
               <th>District</th>
-              <th>Status</th>
+              <th>Application Status</th>
+              <th>Work Status</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -91,6 +112,7 @@ const ApproveRiders = () => {
                 <td>{r.name} </td>
                 <td>{r.email}</td>
                 <td>{r.district}</td>
+
                 <td>
                   <span
                     className={`font-medium ${
@@ -104,7 +126,16 @@ const ApproveRiders = () => {
                     {r.status}
                   </span>
                 </td>
+
+                <td>{r.workStatus}</td>
+
                 <td>
+                  <button
+                    onClick={() => handleViewDetails(r)}
+                    className="p-2 rounded-sm hover:bg-primary cursor-pointer"
+                  >
+                    <FaEye />
+                  </button>
                   <button
                     onClick={() => handleApproval(r)}
                     className="p-2 rounded-sm hover:bg-primary cursor-pointer"
@@ -129,6 +160,37 @@ const ApproveRiders = () => {
           </tbody>
         </table>
       </div>
+
+      {/* rider details modal */}
+      {/* Open the modal using document.getElementById('ID').showModal() method */}
+
+      <dialog id="my_modal_5" className="modal modal-bottom sm:modal-middle">
+        <div className="modal-box">
+          <h3 className="font-bold text-lg">Rider Details</h3>
+
+          <section className="py-4 space">
+            <p>Name: {name}</p>
+            <p>Email: {email}</p>
+            <p>Phone Number: {phoneNo}</p>
+            <p>NID Number: {nid}</p>
+            <p>Region: {region}</p>
+            <p>District: {district}</p>
+            <p>Email: {email}</p>
+            <p>Bike Details: {bikeDetails}</p>
+            <p>Driving License: {drivingLicense}</p>
+            <p>Bike Registration Number: {bikeRegistrationNo}</p>
+            <p>About Rider: {aboutYourself}</p>
+            <p>Status: {riderData.status}</p>
+          </section>
+
+          <div className="modal-action">
+            <form method="dialog">
+              {/* if there is a button in form, it will close the modal */}
+              <button className="btn">Close</button>
+            </form>
+          </div>
+        </div>
+      </dialog>
     </div>
   );
 };
