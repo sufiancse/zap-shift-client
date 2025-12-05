@@ -49,6 +49,7 @@ const Login = () => {
             {...register("password", { required: true, minLength: 6 })}
             className="input"
             placeholder="Password"
+            Value={"aA@1234"}
           />
 
           {errors.password?.type === "required" && (

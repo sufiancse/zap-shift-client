@@ -7,7 +7,9 @@ const RootLayout = () => {
   return (
     <section className="bg-[#fdebea]">
       <div className="flex flex-col min-h-screen max-w-7xl mx-auto ">
-        <NavBar />
+        <div className=" sticky -top-3 z-50">
+          <NavBar />
+        </div>
         <div className="flex-1">
           <Outlet />
         </div>

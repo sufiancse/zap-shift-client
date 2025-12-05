@@ -3,16 +3,18 @@ import {
   FaClipboardList,
   FaMotorcycle,
   FaRegCreditCard,
+  FaTasks,
   FaUsers,
 } from "react-icons/fa";
 import { Link, NavLink, Outlet } from "react-router";
 import useRole from "../Hooks/useRole";
 import { RiEBikeFill } from "react-icons/ri";
+import { SiGoogletasks } from "react-icons/si";
 
 const DashboardLayout = () => {
   const { role } = useRole();
   // console.log(role.role)
-  
+
   return (
     <section className="bg-[#fdebea]">
       <div className="drawer lg:drawer-open max-w-7xl mx-auto">
@@ -111,6 +113,37 @@ const DashboardLayout = () => {
                 </Link>
               </li>
 
+              {/* rider only view this links */}
+              {role.role === "rider" && (
+                <>
+                  <li>
+                    <Link
+                      to={"/dashboard/assigned-deliveries"}
+                      className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                      data-tip="Assigned Deliveries"
+                    >
+                      <FaTasks className="my-1.5 inline-block size-4" />
+                      <span className="is-drawer-close:hidden">
+                        Assigned Deliveries{" "}
+                      </span>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      to={"/dashboard/completed-deliveries"}
+                      className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                      data-tip="Completed Deliveries"
+                    >
+                      <SiGoogletasks className="my-1.5 inline-block size-4" />
+                      <span className="is-drawer-close:hidden">
+                        Completed Deliveries{" "}
+                      </span>
+                    </Link>
+                  </li>
+                </>
+              )}
+
+              {/* admin only view this links */}
               {role.role === "admin" && (
                 <>
                   <li>

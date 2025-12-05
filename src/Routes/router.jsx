@@ -20,6 +20,10 @@ import ApproveRiders from "../Pages/Dashboard/ApproveRiders/ApproveRiders";
 import UsersManagement from "../Pages/Dashboard/UsersManagement/UsersManagement";
 import AdminRoute from "./AdminRoute";
 import AssignRiders from "../Pages/Dashboard/AssignRiders/AssignRiders";
+import RiderRoute from "./RiderRoute";
+import AssignedDeliveries from "../Pages/Dashboard/AssignedDeliveries/AssignedDeliveries";
+import CompletedDeliveries from "../Pages/Dashboard/CompletedDeliveries/CompletedDeliveries";
+import ParcelTrack from "../Pages/ParcelTrack/ParcelTrack";
 
 const router = createBrowserRouter([
   {
@@ -56,25 +60,17 @@ const router = createBrowserRouter([
         ),
       },
       {
+        path: "/parcel-track/:trackingId",
+        Component: ParcelTrack,
+      },
+      {
         path: "*",
         element: <Error404 />,
       },
     ],
   },
-  {
-    path: "/",
-    Component: AuthLayout,
-    children: [
-      {
-        path: "/login",
-        Component: Login,
-      },
-      {
-        path: "/register",
-        element: <Register />,
-      },
-    ],
-  },
+
+  // dashboard
   {
     path: "/dashboard",
     element: (
@@ -103,6 +99,8 @@ const router = createBrowserRouter([
         path: "payment-history",
         Component: PaymentHistory,
       },
+
+      // admin only routes
       {
         path: "approve-riders",
         element: (
@@ -126,6 +124,40 @@ const router = createBrowserRouter([
             <AssignRiders />
           </AdminRoute>
         ),
+      },
+
+      // rider only routes
+      {
+        path: "assigned-deliveries",
+        element: (
+          <RiderRoute>
+            <AssignedDeliveries />
+          </RiderRoute>
+        ),
+      },
+      {
+        path: "completed-deliveries",
+        element: (
+          <RiderRoute>
+            <CompletedDeliveries />
+          </RiderRoute>
+        ),
+      },
+    ],
+  },
+
+  // auth (login, registration)
+  {
+    path: "/",
+    Component: AuthLayout,
+    children: [
+      {
+        path: "/login",
+        Component: Login,
+      },
+      {
+        path: "/register",
+        element: <Register />,
       },
     ],
   },

@@ -1,13 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
 import React, { useRef, useState } from "react";
 import useAxiosSecure from "../../../Hooks/useAxiosSecure";
+import Swal from "sweetalert2";
 
 const AssignRiders = () => {
   const axiosSecure = useAxiosSecure();
   const riderModalRef = useRef();
   const [selectedParcel, setSelectedParcel] = useState(null);
 
-  const { data: parcels = [] } = useQuery({
+  const { data: parcels = [], refetch: parcelsRefetch } = useQuery({
     queryKey: ["parcels", "pending-pickup"],
     queryFn: async () => {
       const res = await axiosSecure.get(
@@ -17,6 +18,7 @@ const AssignRiders = () => {
     },
   });
 
+  // todo: invalidate query after assign riders
   const { data: riders = [] } = useQuery({
     queryKey: ["riders", selectedParcel?.senderDistrict, "available"],
     enabled: !!selectedParcel,
@@ -34,15 +36,32 @@ const AssignRiders = () => {
   };
 
   const handleAssignRider = (rider) => {
-    console.log(rider)
-    const assignInfo = {
+    console.log(rider);
+    const assignRiderInfo = {
       riderId: rider._id,
       riderEmail: rider.email,
       riderName: rider.name,
       parcelId: selectedParcel._id,
+      trackingId: selectedParcel.trackingId,
     };
 
-    axiosSecure.patch(``, assignInfo);
+    axiosSecure
+      .patch(`/parcels/${selectedParcel._id}`, assignRiderInfo)
+      .then((res) => {
+        if (res.data.modifiedCount) {
+          riderModalRef.current.close();
+
+          parcelsRefetch();
+
+          Swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: `Rider has been assigned.`,
+            showConfirmButton: false,
+            timer: 2500,
+          });
+        }
+      });
   };
 
   return (
@@ -80,9 +99,9 @@ const AssignRiders = () => {
                 <td>
                   <button
                     onClick={() => openRiderModalRef(p)}
-                    className="btn btn-primary"
+                    className="p-2 rounded-sm bg-primary text-medium"
                   >
-                    Assign Rider
+                    Find Riders
                   </button>
                 </td>
               </tr>
