@@ -19,7 +19,7 @@ const AssignRiders = () => {
   });
 
   // todo: invalidate query after assign riders
-  const { data: riders = [] } = useQuery({
+  const { data: riders = [] ,refetch: riderRefetch} = useQuery({
     queryKey: ["riders", selectedParcel?.senderDistrict, "available"],
     enabled: !!selectedParcel,
     queryFn: async () => {
@@ -52,6 +52,7 @@ const AssignRiders = () => {
           riderModalRef.current.close();
 
           parcelsRefetch();
+          riderRefetch()
 
           Swal.fire({
             position: "top-end",
